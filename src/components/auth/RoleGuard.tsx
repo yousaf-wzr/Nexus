@@ -13,7 +13,7 @@ export const RoleGuard: React.FC<RoleGuardProps> = ({ children, allowedRoles }) 
   if (!isAuthenticated) return <Navigate to="/login" />;
   
   if (!allowedRoles.includes(user?.role)) {
-    // Redirect to their specific home if they try to cross boundaries
+    
     return <Navigate to={user?.role === 'entrepreneur' ? '/dashboard/entrepreneur' : '/dashboard/investor'} />;
   }
 

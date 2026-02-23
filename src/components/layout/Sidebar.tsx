@@ -82,7 +82,6 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* FOOTER (Optional info space) */}
       <div className="p-6 border-t border-gray-50">
          <p className="text-[10px] text-gray-400 font-bold text-center tracking-widest uppercase">
            Nexus v1.0.4

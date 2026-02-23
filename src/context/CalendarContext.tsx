@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { AvailabilitySlot, MeetingRequest } from "../types/calendar";
 import { v4 as uuid } from "uuid";
-import { useAuth } from "./AuthContext"; // 1. Added this import
+import { useAuth } from "./AuthContext"; 
 
 type CalendarContextType = {
   availability: AvailabilitySlot[];
   meetings: MeetingRequest[];
   addAvailability: (start: string, end: string) => void;
-  deleteAvailability: (id: string) => void; // 2. Added to type
+  deleteAvailability: (id: string) => void; 
   requestMeeting: (start: string, end: string) => void;
   updateMeetingStatus: (id: string, status: "accepted" | "declined") => void;
 };
@@ -17,7 +17,7 @@ const CalendarContext = createContext<CalendarContextType | null>(null);
 const STORAGE_KEY = "business_nexus_calendar";
 
 export const CalendarProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth(); // 3. Get the user here
+  const { user } = useAuth();
   const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
   const [meetings, setMeetings] = useState<MeetingRequest[]>([]);
 
@@ -48,7 +48,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
       id: Math.random().toString(36).substr(2, 9),
       start,
       end,
-      userId: user?.id || 'guest' // Fallback if user is null
+      userId: user?.id || 'guest' 
     };
     setAvailability(prev => [...prev, newSlot]);
   };
@@ -82,7 +82,7 @@ export const CalendarProvider = ({ children }: { children: React.ReactNode }) =>
         availability,
         meetings,
         addAvailability,
-        deleteAvailability, // 4. Added comma and function here
+        deleteAvailability, 
         requestMeeting,
         updateMeetingStatus,
       }}

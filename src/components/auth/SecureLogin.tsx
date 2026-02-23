@@ -19,8 +19,6 @@ export const SecureLogin: React.FC = () => {
     setLoading(true);
 
     try {
-      // Direct login: satisfied the (email, password, role) requirement
-      // Defaulting to entrepreneur for this specific secure view
       await login(email, password, 'entrepreneur'); 
       
       toast.success("Welcome back!");

@@ -91,7 +91,6 @@ export const InvestorDiscovery: React.FC = () => {
             <StartupCard key={startup.id} startup={startup} />
           ))}
           
-          {/* PLACEHOLDER FOR EMPTY STATE OR LOADING */}
           <div className="border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center p-12 text-center group hover:border-blue-300 transition-colors cursor-pointer">
             <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-all">
               <Filter size={24} />

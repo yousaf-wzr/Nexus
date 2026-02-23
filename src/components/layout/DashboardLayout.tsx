@@ -26,7 +26,6 @@ export const DashboardLayout: React.FC = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Security route protection
   if (location.pathname.includes('/dashboard/investor') && user?.role !== 'investor') {
     return <Navigate to="/dashboard/entrepreneur" replace />;
   }
@@ -36,14 +35,11 @@ export const DashboardLayout: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Global Navbar at the very top */}
       <Navbar />
       
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar without logo */}
         <Sidebar />
         
-        {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           <div className="max-w-7xl mx-auto">
             <Outlet />

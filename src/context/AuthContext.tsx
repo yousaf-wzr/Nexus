@@ -47,22 +47,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await new Promise(resolve => setTimeout(resolve, 800));
       const users = getUsers();
 
-      // We find the user by email. 
-      // In a real app, you'd check password here too.
       const foundUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
       if (!foundUser) {
         throw new Error("User not found. Please sign up.");
       }
 
-      // If they selected the wrong role on the login page, we update it to match their profile
-      // or simply allow them in with their stored role.
       setUser(foundUser);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(foundUser));
       toast.success(`Welcome back, ${foundUser.name}`);
     } catch (error) {
       toast.error((error as Error).message);
-      throw error; // Throw so the Page knows login failed
+      throw error; 
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const forgotPassword = async (email: string): Promise<void> => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
-      const users = getUsers(); // FIXED: was missing
+      const users = getUsers(); 
       const exists = users.some((u) => u.email.toLowerCase() === email.toLowerCase());
 
       if (!exists) {

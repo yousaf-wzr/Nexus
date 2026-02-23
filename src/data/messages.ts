@@ -1,7 +1,6 @@
 import { Message, ChatConversation } from '../types';
 
 export const messages: Message[] = [
-  // Conversation between Sarah (e1) and Michael (i1)
   {
     id: 'm1',
     senderId: 'e1',
@@ -35,7 +34,6 @@ export const messages: Message[] = [
     isRead: false
   },
 
-  // Conversation between Maya (e3) and Jennifer (i2)
   {
     id: 'm5',
     senderId: 'i2',
@@ -61,7 +59,7 @@ export const messages: Message[] = [
     isRead: false
   },
 
-  // Conversation between David (e2) and Robert (i3)
+  
   {
     id: 'm8',
     senderId: 'e2',

@@ -12,7 +12,7 @@ export const CalendarView = () => {
     availability,
     meetings,
     addAvailability,
-    deleteAvailability, // Added this to the destructuring
+    deleteAvailability, 
     requestMeeting,
     updateMeetingStatus,
   } = useCalendar();
@@ -35,7 +35,6 @@ export const CalendarView = () => {
 
   const handleEventClick = (info: EventClickArg) => {
     // 1. Handle Availability Deletion (Background events)
-    // Background events are identified by their display property or lack of title
     if (info.event.display === 'background' || !info.event.title) {
       const confirmDelete = window.confirm("Do you want to remove this availability slot?");
       if (confirmDelete) {
@@ -97,7 +96,6 @@ export const CalendarView = () => {
         aspectRatio={1.35}
         nowIndicator={true}
         expandRows={true}
-        // Setting business hours for the Week/Day views
         slotMinTime="08:00:00" 
         slotMaxTime="20:00:00"
         allDaySlot={false}

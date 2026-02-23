@@ -61,9 +61,6 @@ export const investors: Investor[] = [
 
 const STORAGE_KEY = 'business_nexus_all_users';
 
-/**
- * Gets all users (Static + those registered in LocalStorage)
- */
 export const getUsers = () => {
   // 1. Get the hardcoded lists we defined at the top of the file
   const initial = [...entrepreneurs, ...investors];
@@ -83,7 +80,6 @@ export const getUsersByRole = (role: 'entrepreneur' | 'investor') => getUsers().
 
 
 export const saveUsers = (allUsers: any[]) => {
-  // We only want to save users that aren't part of the hardcoded initial list
   const initialIds = [...entrepreneurs, ...investors].map(u => u.id);
   const newUsersOnly = allUsers.filter(u => !initialIds.includes(u.id));
   

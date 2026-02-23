@@ -44,7 +44,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
-            {/* 2. Full-Screen (No Sidebar) - Protected */}
             <Route 
               path="/video-call" 
               element={
@@ -53,14 +52,13 @@ function App() {
                 </RoleGuard>
               } 
             />
-
-            {/* 3. Authenticated Routes with Sidebar */}
+           
             <Route path="/" element={<DashboardLayout />}>
               <Route index element={<RootRedirect />} />
-              
-              {/* Entrepreneur Specific */}
+            
               <Route path="dashboard/entrepreneur">
                 <Route 
+
                   index 
                   element={
                     <RoleGuard allowedRoles={['entrepreneur']}>
@@ -68,7 +66,7 @@ function App() {
                     </RoleGuard>
                   } 
                 />
-                {/* Pointing to the CreatePitch component we built earlier */}
+               
                 <Route 
                   path="create-pitch" 
                   element={
@@ -98,7 +96,7 @@ function App() {
                     </RoleGuard>
                   } 
                 />
-                {/* Note: InvestorDiscovery removed as per your structure */}
+              
                 <Route 
                   path="startup/:id" 
                   element={
