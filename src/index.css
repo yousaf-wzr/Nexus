@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Theme Base */
+body {
+  @apply bg-gray-50 text-gray-900 font-sans;
+}
+
+/* Optional: smoother rendering */
+html {
+  scroll-behavior: smooth;
+}
+.fc {
+  font-family: inherit;
+  --fc-button-bg-color: #2563eb;
+  --fc-button-border-color: #2563eb;
+  --fc-button-hover-bg-color: #1d4ed8;
+  --fc-event-bg-color: #2563eb;
+  --fc-border-color: #f1f5f9;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
