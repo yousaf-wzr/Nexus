@@ -2,7 +2,7 @@
 
 Nexus is a modern, scalable, and production-ready meeting scheduler and team management dashboard built using **React 18**, **TypeScript**, and **Tailwind CSS**. It helps teams efficiently manage schedules, pitches, and user workflows through a clean and intuitive interface.
 
-[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel)](https://nexus-yousaf.vercel.app)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel)](https://nexus-six-omega.vercel.app/)
 
 ---
 
