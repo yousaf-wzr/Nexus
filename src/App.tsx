@@ -28,9 +28,24 @@ import { SchedulePage } from "./pages/SchedulePage";
 import { VideoCallPage } from "./pages/VideoCallPage";
 import { ChatPage } from "./pages/chat/ChatPage";
 
+
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, isAuthenticated } = useAuth();
+  
+  if (isAuthenticated) {
+    return <Navigate to={user?.role === 'investor' ? "/dashboard/investor" : "/dashboard/entrepreneur"} replace />;
+  }
+  
+  return <>{children}</>;
+};
+
 const RootRedirect = () => {
   const { user, isAuthenticated } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
   return <Navigate to={user?.role === 'investor' ? "/dashboard/investor" : "/dashboard/entrepreneur"} replace />;
 };
 
@@ -40,10 +55,25 @@ function App() {
       <CalendarProvider>
         <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
-            {/* 1. Public Routes */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+           
+            <Route 
+              path="/login" 
+              element={
+                <PublicRoute>
+                  <LoginPage />
+                </PublicRoute>
+              } 
+            />
+            <Route 
+              path="/register" 
+              element={
+                <PublicRoute>
+                  <RegisterPage />
+                </PublicRoute>
+              } 
+            />
 
+            {/* 2. Standalone Protected Routes */}
             <Route 
               path="/video-call" 
               element={
@@ -52,13 +82,15 @@ function App() {
                 </RoleGuard>
               } 
             />
-           
+            
+            {/* 3. Main Dashboard Layout (Nested Routes) */}
             <Route path="/" element={<DashboardLayout />}>
+              {/* Intelligent Home Redirect */}
               <Route index element={<RootRedirect />} />
             
+              {/* Entrepreneur Specific */}
               <Route path="dashboard/entrepreneur">
                 <Route 
-
                   index 
                   element={
                     <RoleGuard allowedRoles={['entrepreneur']}>
@@ -66,7 +98,7 @@ function App() {
                     </RoleGuard>
                   } 
                 />
-               
+                
                 <Route 
                   path="create-pitch" 
                   element={
@@ -125,7 +157,7 @@ function App() {
                 } 
               />
               
-              {/* Shared Routes */}
+              {/* Shared Protected Routes */}
               <Route path="schedule" element={<SchedulePage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="notifications" element={<NotificationsPage />} />
@@ -141,8 +173,8 @@ function App() {
               <Route path="chat/:userId" element={<ChatPage />} />
             </Route>
 
-            {/* 4. Catch-all */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            {/* 4. Catch-all: Redirect unknown paths to Root Logic */}
+            <Route path="*" element={<RootRedirect />} />
           </Routes>
         </Router>
       </CalendarProvider>
