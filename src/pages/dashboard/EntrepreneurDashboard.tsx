@@ -2,27 +2,36 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Bell, Calendar, Video, FileText, CreditCard, 
-  Wallet, Rocket, ArrowUpRight, Target
+  Wallet, Rocket, ArrowUpRight, Target, Layout, Archive 
 } from 'lucide-react';
 import { Card, CardBody } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { InvestorCard } from '../../components/investor/InvestorCard';
 import { useAuth } from '../../context/AuthContext';
 import { useCalendar } from '../../context/CalendarContext';
+import { usePitches } from '../../context/PitchContext'; 
 import { getUsers } from '../../data/users'; 
 import TestCalendar from '../TestCalendar'; 
 
 export const EntrepreneurDashboard: React.FC = () => {
   const { user } = useAuth();
   const { meetings } = useCalendar(); 
+  const { pitches, archivePitch } = usePitches(); // Get archive function
+  
+  const activePitches = pitches.filter(p => p.status !== 'archived');
   
   const walletBalance = 125000.00;
-  
   const recommendedInvestors = getUsers()
     .filter(u => u.role === 'investor')
     .slice(0, 2);
 
   if (!user) return null;
+
+  const handleArchive = (id: string, name: string) => {
+    if (window.confirm(`Move "${name}" to archives? It will no longer be visible to investors.`)) {
+      archivePitch(id);
+    }
+  };
 
   const pendingMeetingsCount = meetings.filter(m => m.status === 'pending').length;
 
@@ -46,8 +55,6 @@ export const EntrepreneurDashboard: React.FC = () => {
 
       {/* 2. Key Metrics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* Wallet / Financials */}
         <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card className="bg-slate-950 text-white border-none shadow-2xl relative overflow-hidden group rounded-3xl">
             <CardBody className="p-8">
@@ -61,15 +68,6 @@ export const EntrepreneurDashboard: React.FC = () => {
               </div>
               <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Available Capital</p>
               <h2 className="text-4xl font-black mt-2 tracking-tight">${walletBalance.toLocaleString()}</h2>
-              <div className="flex items-center gap-2 mt-4">
-                <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <p className="text-emerald-400 text-[11px] font-bold">+$50,000 in escrow</p>
-              </div>
-              
-              {/* Background Decoration */}
-              <div className="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
-                <Wallet size={200} />
-              </div>
             </CardBody>
           </Card>
 
@@ -79,17 +77,9 @@ export const EntrepreneurDashboard: React.FC = () => {
                 <div className="p-3 bg-violet-50 rounded-2xl text-violet-600">
                   <Target size={24} strokeWidth={2.5} />
                 </div>
-                <div className="flex -space-x-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 shadow-sm" />
-                  ))}
-                </div>
               </div>
               <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Active Pitch Views</p>
               <h2 className="text-4xl font-black text-slate-900 mt-2 tracking-tight">1,240</h2>
-              <p className="text-violet-600 text-[11px] font-bold mt-4 flex items-center gap-1">
-                <ArrowUpRight size={14} /> +12% from last week
-              </p>
             </CardBody>
           </Card>
         </div>
@@ -106,25 +96,50 @@ export const EntrepreneurDashboard: React.FC = () => {
               <div className={`h-full bg-white hover:bg-${item.color}-50/50 rounded-3xl p-5 flex flex-col items-center justify-center text-center transition-all border border-slate-100 hover:border-${item.color}-200/50 shadow-sm hover:shadow-md`}>
                 <item.icon className={`text-${item.color}-600 mb-3 group-hover:scale-110 transition-transform`} size={28} strokeWidth={2} />
                 <span className={`text-[10px] font-black text-${item.color}-700 uppercase tracking-widest`}>{item.label}</span>
-                {item.count ? (
-                  <span className="mt-2 px-2.5 py-0.5 bg-indigo-600 text-white text-[9px] rounded-full font-black shadow-lg shadow-indigo-200">
-                    {item.count}
-                  </span>
-                ) : null}
               </div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* 3. Main Content: Schedule & Matchmaking */}
+      {/* 3. ACTIVE PITCHES FEED (Filters out Archived) */}
+      {activePitches.length > 0 && (
+        <div className="space-y-4">
+          <h2 className="text-sm font-black text-slate-900 uppercase tracking-[0.15em] px-1">Active Ventures</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {activePitches.map((pitch) => (
+              <Card key={pitch.id} className="border-slate-100 shadow-sm hover:shadow-md transition-all rounded-3xl bg-white border">
+                <CardBody className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <span className="text-[9px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-wider">
+                      {pitch.industry}
+                    </span>
+                    <button 
+                      onClick={() => handleArchive(pitch.id, pitch.startupName)}
+                      className="text-slate-300 hover:text-amber-600 transition-colors p-1"
+                      title="Archive Venture"
+                    >
+                      <Archive size={16} />
+                    </button>
+                  </div>
+                  <h3 className="font-bold text-slate-900 mb-1">{pitch.startupName}</h3>
+                  <p className="text-xs text-slate-500 mb-4 line-clamp-2">{pitch.tagline}</p>
+                  <div className="pt-4 border-t border-slate-50 flex justify-between items-center">
+                    <p className="text-[10px] font-bold text-slate-400">Target: <span className="text-slate-900">${Number(pitch.targetAmount).toLocaleString()}</span></p>
+                    <Link to="#" className="text-[10px] font-black text-indigo-600 uppercase">Manage</Link>
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 4. Calendar & Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        {/* Calendar Section */}
         <div className="lg:col-span-8 space-y-6">
           <div className="flex justify-between items-center px-1">
             <h2 className="text-sm font-black text-slate-900 uppercase tracking-[0.15em]">Upcoming Sessions</h2>
-            <Link to="/schedule" className="text-[10px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-800 transition-colors">Full Calendar</Link>
           </div>
           <Card className="border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden bg-white rounded-[2rem]">
             <CardBody className="p-0">
@@ -135,39 +150,17 @@ export const EntrepreneurDashboard: React.FC = () => {
           </Card>
         </div>
 
-        {/* Investor Matchmaking Sidebar */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="flex justify-between items-center px-1">
-            <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Top Matches</h2>
-            <div className="flex items-center gap-2 bg-emerald-50 px-2 py-1 rounded-full">
-               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-               <span className="text-[9px] font-black text-emerald-700 uppercase tracking-tighter">Live Sync</span>
-            </div>
-          </div>
-          
+          <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Top Matches</h2>
           <div className="space-y-4">
             {recommendedInvestors.map(investor => (
-              <div key={investor.id} className="group transition-all hover:-translate-y-1">
-                <InvestorCard 
-                  investor={investor} 
-                  showActions={false} 
-                  className="border-slate-100 shadow-sm group-hover:shadow-md transition-shadow rounded-3xl"
-                />
-              </div>
+              <InvestorCard 
+                key={investor.id}
+                investor={investor} 
+                showActions={false} 
+                className="border-slate-100 shadow-sm rounded-3xl"
+              />
             ))}
-            
-            <Card className="border-dashed border-2 border-slate-200 bg-slate-50/50 rounded-[2rem] p-8 text-center">
-              <div className="p-4 bg-white rounded-2xl w-fit mx-auto shadow-sm mb-4 border border-slate-100">
-                <Bell className="text-indigo-600" size={24} strokeWidth={2.5} />
-              </div>
-              <p className="text-xs font-black text-slate-900 uppercase tracking-widest mb-1">New Match Alert</p>
-              <p className="text-[11px] text-slate-500 font-medium mb-5 px-4">We found 3 more investors interested in your sector.</p>
-              <Link to="/investors">
-                <Button variant="outline" className="text-[10px] font-black uppercase tracking-widest py-3 px-6 rounded-xl border-slate-200 hover:bg-white hover:border-indigo-600 hover:text-indigo-600 transition-all">
-                  Browse All
-                </Button>
-              </Link>
-            </Card>
           </div>
         </div>
       </div>

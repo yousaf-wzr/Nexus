@@ -39,7 +39,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ to, icon, text }) => {
   );
 };
 
-// EXPLICIT NAMED EXPORT - This fixes the red line in DashboardLayout
+
 export const Sidebar: React.FC = () => {
   const { user } = useAuth();
   
